@@ -4,6 +4,7 @@ import 'services/supabase_service.dart';
 
 // Import our clean expense tracker screens
 import 'expense_app/screens/expense_list_screen.dart';
+import 'expense_app/screens/auth_gate.dart';
 import 'expense_app/models/expense.dart';
 import 'expense_app/services/expense_service.dart';
 
@@ -56,7 +57,7 @@ class MyExpenseApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: ExpenseListScreen(),
+      home: AuthGate(),
       debugShowCheckedModeBanner: false,
     );
   }
