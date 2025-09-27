@@ -1,0 +1,72 @@
+[
+  {
+    "date": "2025-09-24",
+    "type": "session_summary",
+    "what_we_set_up": [
+      "Supabase backend with expenses table and migrations (add_expenses, expenses_user_rls, lockdown_expenses_rls)",
+      "Environment config via env.json (SUPABASE_URL, SUPABASE_ANON_KEY)",
+      "Auth flow: AuthGate + LoginScreen; main.dart uses AuthGate; Sign out in app bar",
+      "ExpenseListScreen updated: hides dev DB test FAB on production",
+      "Local run guidance on Windows (C:/dev path or UNC pushd)",
+      "Deploy workflows: GitHub Pages and Cloudflare Pages; SPA routing with web/404.html"
+    ],
+    "tomorrow_quick_start": [
+      "Copy files listed in COPY_CHECKLIST.txt into Windows repo",
+      "Run migrations in order: 20250923_add_expenses.sql, 20250923_expenses_user_rls.sql, 20250924_lockdown_expenses_rls.sql",
+      "Run locally with: flutter run -d chrome --dart-define-from-file=env.json",
+      "Deploy via GitHub Pages (Actions) or Cloudflare Pages (secrets + workflow)"
+    ],
+    "notes": [
+      "Rows without user_id won’t be visible after RLS lockdown; backfill if needed",
+      "Do not commit secrets; env.json is used at build time only"
+    ]
+  },
+  {
+    "date": "2025-09-25",
+    "type": "session_plan",
+    "focus": [
+      "Finish live deployment (GitHub Pages or Cloudflare)",
+      "Enable and verify Supabase Auth + RLS end-to-end",
+      "Optional: first analytics widget; Android Studio run"
+    ],
+    "pre_flight_checklist": [
+      "env.json has SUPABASE_URL and SUPABASE_ANON_KEY",
+      "Migrations run in order (add_expenses, expenses_user_rls, lockdown)",
+      "web/404.html committed for SPA routing"
+    ],
+    "deploy": {
+      "github_pages": [
+        "git add -A && git commit -m 'Deploy Pages' && git push",
+        "Repo Settings → Pages → ensure GitHub Actions",
+        "Open Pages URL; sign in and verify CRUD"
+      ],
+      "cloudflare_pages": [
+        "Set GitHub secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID; variable: CF_PAGES_PROJECT_NAME",
+        "Push to main to build and publish build/web",
+        "Open Cloudflare Pages URL; sign in and verify CRUD"
+      ]
+    },
+    "auth_rls_validation": [
+      "Sign up/in from the live site",
+      "Create expense; verify user_id set in Supabase",
+      "Sign out; rows become hidden",
+      "Backfill legacy rows’ user_id if needed"
+    ],
+    "android": [
+      "Open in Android Studio",
+      "Run args: --dart-define-from-file=env.json",
+      "Test CRUD on emulator/device"
+    ],
+    "stretch_goals": [
+      "Add bar chart on Analytics tab (spend by category)",
+      "Receipt upload placeholder (Supabase Storage)",
+      "Export CSV for current month"
+    ],
+    "handy_commands": [
+      "flutter pub get",
+      "flutter run -d chrome --dart-define-from-file=env.json",
+      "flutter build web --release --dart-define-from-file=env.json"
+    ]
+  }
+]
+

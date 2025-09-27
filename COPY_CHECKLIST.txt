@@ -1,0 +1,38 @@
+Copy Checklist (exact files to copy)
+
+New/updated app code
+- lib/main.dart
+- lib/expense_app/screens/auth_gate.dart
+- lib/expense_app/screens/login_screen.dart
+- lib/expense_app/screens/expense_list_screen.dart
+
+Supabase migrations
+- supabase/migrations/20250923_add_expenses.sql
+- supabase/migrations/20250923_expenses_user_rls.sql
+- supabase/migrations/20250924_lockdown_expenses_rls.sql
+ - supabase/migrations/20250925_backfill_expenses_user_id.sql
+
+Deploy workflows and routing
+- .github/workflows/deploy-pages.yml
+- .github/workflows/deploy-cloudflare.yml
+- web/404.html
+- web/_redirects
+- DEPLOY.md
+- AUTH_SETUP.md
+- START_TOMORROW.md
+
+Environment
+- env.json (set SUPABASE_URL and SUPABASE_ANON_KEY)
+
+Optional (verify)
+- .gitignore (make sure web/ is not ignored)
+
+After copying
+1) git add -A && git commit -m "Auth + RLS + Deploy workflows"
+2) git push (GitHub Pages) or configure Cloudflare secrets/variables and push
+3) In Supabase SQL Editor, run migrations in order:
+   - 20250923_add_expenses.sql
+   - 20250923_expenses_user_rls.sql
+   - 20250924_lockdown_expenses_rls.sql
+   - 20250925_backfill_expenses_user_id.sql (set your email at top)
+4) Run locally: flutter run -d chrome --dart-define-from-file=env.json

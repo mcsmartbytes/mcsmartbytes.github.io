@@ -1,0 +1,34 @@
+Perfect! I can see all your screens. Here are the key files you need to modify for your expense tracker conversion:
+
+Priority Files to Transform:
+1. Travel Requests Dashboard (Main Priority)
+File: lib/screens/travel_requests_dashboard.dart Changes Needed:
+
+Convert "Travel Requests" → "Expenses"
+Replace trip data with expense records (amount, category, date)
+Change tab navigation from "Requests/Calendar/Profile" → "Expenses/Analytics/Profile"
+Update filter system for expense categories instead of travel status
+2. New Travel Request Form
+File: lib/screens/new_travel_request_form.dart Changes Needed:
+
+Transform into "Add Expense" form
+Replace trip fields with: amount, category, description, date, receipt upload
+Remove travel-specific sections (justification, attendees, locations)
+Keep validation but adapt for expense data
+3. Travel Request Detail View
+File: lib/screens/travel_request_detail_view.dart Changes Needed:
+
+Convert to "Expense Detail" view
+Show expense breakdown instead of trip details
+Remove approval workflow (unless you want expense approval)
+Display receipt images and category information
+4. Data Models (Critical)
+Files: Look for lib/models/ folder Changes Needed:
+
+Convert TravelRequest model → Expense model
+Update field names and types
+Modify Supabase service calls
+Secondary Files:
+Manager Approval Dashboard → Skip or convert to "Budget Overview"
+Travel Calendar → Convert to "Expense History" or spending timeline
+Next Step: Access your code view and locate these files. Which one would you like to start with? I recommend beginning with the Travel Requests Dashboard since it's your main screen.
