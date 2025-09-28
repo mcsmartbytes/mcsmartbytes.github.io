@@ -20,8 +20,12 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Build Flutter Web (with env)
-        run: flutter build web --release --dart-define-from-file=env.json
+      - name: Enable web and build (with env)
+        run: |
+          flutter config --enable-web
+          flutter --version
+          flutter doctor -v
+          flutter build web --release --dart-define-from-file=env.json
 
       - name: Compute Cloudflare project name
         run: |
@@ -33,12 +37,18 @@ jobs:
             echo "PROJECT_NAME=${{ vars.CF_PAGES_PROJECT_NAME }}" >> $GITHUB_ENV
           fi
 
-      - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ env.PROJECT_NAME }}
-          directory: build/web
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+      - name: Install Wrangler
+        run: npm i -g wrangler@3
+
+      - name: Deploy with Wrangler (Cloudflare Pages)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          # Ensure build output exists
+          test -f build/web/index.html || (echo "Missing build/web output" && exit 1)
+          # Create or update the Pages project and deploy
+          wrangler pages deploy build/web \
+            --project-name "$PROJECT_NAME" \
+            --branch main \
+            --commit-dirty=true
