@@ -48,6 +48,7 @@ jobs:
           cp -f web/404.html build/web/ 2>/dev/null || true
           cp -f web/health.html build/web/ 2>/dev/null || true
           cp -f web/_redirects build/web/ 2>/dev/null || true
+          cp -f web/favicon.ico build/web/ 2>/dev/null || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
