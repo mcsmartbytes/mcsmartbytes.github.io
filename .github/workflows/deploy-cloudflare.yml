@@ -23,13 +23,22 @@ jobs:
       - name: Build Flutter Web (with env)
         run: flutter build web --release --dart-define-from-file=env.json
 
+      - name: Compute Cloudflare project name
+        run: |
+          echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
+          if [ -z "${{ vars.CF_PAGES_PROJECT_NAME }}" ]; then
+            # Default to repo name; must be lowercase and alphanumeric + hyphens
+            echo "PROJECT_NAME=$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')" >> $GITHUB_ENV
+          else
+            echo "PROJECT_NAME=${{ vars.CF_PAGES_PROJECT_NAME }}" >> $GITHUB_ENV
+          fi
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ vars.CF_PAGES_PROJECT_NAME }}
+          projectName: ${{ env.PROJECT_NAME }}
           directory: build/web
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           branch: main
-
