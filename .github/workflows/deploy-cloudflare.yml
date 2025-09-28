@@ -44,10 +44,12 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
         run: |
           # Ensure build output exists
           test -f build/web/index.html || (echo "Missing build/web output" && exit 1)
           # Create or update the Pages project and deploy
+          echo "PROJECT_NAME=$PROJECT_NAME"
           wrangler pages deploy build/web \
             --project-name "$PROJECT_NAME" \
             --branch main \
