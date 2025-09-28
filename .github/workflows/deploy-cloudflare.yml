@@ -33,7 +33,7 @@ jobs:
           if [ -z "${{ vars.CF_PAGES_PROJECT_NAME }}" ]; then
             # Default to repo name; must be lowercase and alphanumeric + hyphens
             SANITIZED=$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
-            if [ -z "$SANITIZED" ]; then SANITIZED=flutter-app; fi
+            if [ -z "$SANITIZED" ]; then SANITIZED=expense-tracker-web; fi
             echo "PROJECT_NAME=$SANITIZED" >> $GITHUB_ENV
           else
             echo "PROJECT_NAME=${{ vars.CF_PAGES_PROJECT_NAME }}" >> $GITHUB_ENV
@@ -51,11 +51,12 @@ jobs:
       - name: Deploy with Wrangler (Cloudflare Pages)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           # Ensure build output exists
           test -f build/web/index.html || (echo "Missing build/web output" && exit 1)
           # Create or update the Pages project and deploy
+          echo "Using Cloudflare Account: ${CLOUDFLARE_ACCOUNT_ID:0:4}**** (masked)"
           wrangler pages deploy build/web \
             --project-name "$PROJECT_NAME" \
             --branch main \
