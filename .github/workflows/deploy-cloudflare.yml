@@ -56,8 +56,12 @@ jobs:
           # Ensure build output exists
           test -f build/web/index.html || (echo "Missing build/web output" && exit 1)
           # Create or update the Pages project and deploy
-          echo "Using Cloudflare Account: ${CLOUDFLARE_ACCOUNT_ID:0:4}**** (masked)"
+          echo "Using Cloudflare Account: ${CLOUDFLARE_ACCOUNT_ID:0:6}**** (masked)"
+          wrangler --version
+          wrangler whoami || true
+          wrangler pages project list --account-id "$CLOUDFLARE_ACCOUNT_ID" || true
           wrangler pages deploy build/web \
             --project-name "$PROJECT_NAME" \
             --branch main \
-            --commit-dirty=true
+            --commit-dirty=true \
+            --account-id "$CLOUDFLARE_ACCOUNT_ID"
