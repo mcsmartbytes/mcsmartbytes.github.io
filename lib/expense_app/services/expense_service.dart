@@ -124,4 +124,24 @@ class ExpenseService {
       e.date.isBefore(end.add(Duration(days: 1)))
     ).toList()..sort((a, b) => b.date.compareTo(a.date));
   }
+
+  // Get expenses by category
+  List<Expense> getExpensesByCategory(String category) {
+    return _expenses
+        .where((e) => e.category.toLowerCase() == category.toLowerCase())
+        .toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  // Monthly summary: totals per category for given month
+  Map<String, double> getMonthlySummary(int year, int month) {
+    final startDate = DateTime(year, month, 1);
+    final endDate = DateTime(year, month + 1, 0);
+    final inRange = getExpensesByDateRange(startDate, endDate);
+    final Map<String, double> summary = {};
+    for (final e in inRange) {
+      summary[e.category] = (summary[e.category] ?? 0) + e.amount;
+    }
+    return summary;
+  }
 }

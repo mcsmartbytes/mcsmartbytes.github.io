@@ -260,7 +260,8 @@ class SupabaseExpenseService {
   // ===== Development helpers (no private field access from UI) =====
   Future<dynamic> devTestSelectOne() async {
     if (_demoMode) {
-      return _memory.getAllExpenses().then((value) => value.isNotEmpty ? [value.first.toMap()] : []);
+      final value = _memory.getAllExpenses();
+      return value.isNotEmpty ? [value.first.toMap()] : [];
     }
     return await _supabase.from('expenses').select().limit(1);
   }
