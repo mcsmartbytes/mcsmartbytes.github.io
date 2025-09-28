@@ -50,6 +50,17 @@ jobs:
           cp -f web/_redirects build/web/ 2>/dev/null || true
           cp -f web/favicon.ico build/web/ 2>/dev/null || true
 
+      - name: Package site artifact
+        run: |
+          cd build/web
+          zip -qr ../site.zip .
+
+      - name: Upload site.zip (for manual hosting)
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: project/expense_tracker_windows/build/site.zip
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
