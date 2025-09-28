@@ -14,7 +14,10 @@ void main() async {
   // Initialize Supabase using --dart-define-from-file=env.json
   // Requires SUPABASE_URL and SUPABASE_ANON_KEY in env.json
   try {
-    await SupabaseService.initialize();
+    const demoMode = String.fromEnvironment('DEMO_MODE', defaultValue: 'false') == 'true';
+    if (!demoMode) {
+      await SupabaseService.initialize();
+    }
     // Optional: simple ping can be added here if needed
   } catch (e) {
     // If keys are missing or invalid, log the error; app can still run for in-memory mode
@@ -32,6 +35,7 @@ void main() async {
 class MyExpenseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    const demoMode = String.fromEnvironment('DEMO_MODE', defaultValue: 'false') == 'true';
     return MaterialApp(
       title: 'Expense Tracker',
       theme: ThemeData(
@@ -57,7 +61,7 @@ class MyExpenseApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: AuthGate(),
+      home: demoMode ? ExpenseListScreen() : AuthGate(),
       debugShowCheckedModeBanner: false,
     );
   }

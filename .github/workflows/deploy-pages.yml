@@ -32,10 +32,12 @@ jobs:
       - name: Compute base href
         run: |
           echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          if [ -z "${{ vars.PAGES_BASE_HREF }}" ]; then
-            echo "BASE_HREF=/${REPO_NAME}/" >> $GITHUB_ENV
-          else
+          if [ -n "${{ vars.PAGES_BASE_HREF }}" ]; then
             echo "BASE_HREF=${{ vars.PAGES_BASE_HREF }}" >> $GITHUB_ENV
+          elif [[ "$REPO_NAME" == *.github.io ]]; then
+            echo "BASE_HREF=/" >> $GITHUB_ENV
+          else
+            echo "BASE_HREF=/${REPO_NAME}/" >> $GITHUB_ENV
           fi
 
       - name: Build Flutter Web (with env)

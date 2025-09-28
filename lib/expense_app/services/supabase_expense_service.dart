@@ -1,15 +1,23 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/expense.dart';
+import 'expense_service.dart' as memory;
 
 class SupabaseExpenseService {
   static final SupabaseExpenseService _instance = SupabaseExpenseService._internal();
   factory SupabaseExpenseService() => _instance;
   SupabaseExpenseService._internal();
 
+  // Demo mode: delegate to in-memory service
+  static const bool _demoMode = String.fromEnvironment('DEMO_MODE', defaultValue: 'false') == 'true';
+  final memory.ExpenseService _memory = memory.ExpenseService();
+
   final SupabaseClient _supabase = Supabase.instance.client;
 
   // Get all expenses
   Future<List<Expense>> getAllExpenses() async {
+    if (_demoMode) {
+      return _memory.getAllExpenses();
+    }
     try {
       print('Fetching expenses from Supabase...');
       final response = await _supabase
@@ -33,6 +41,9 @@ class SupabaseExpenseService {
 
   // Get expenses by status
   Future<List<Expense>> getExpensesByStatus(String status) async {
+    if (_demoMode) {
+      return _memory.getExpensesByStatus(status);
+    }
     try {
       final response = await _supabase
           .from('expenses')
@@ -51,6 +62,10 @@ class SupabaseExpenseService {
 
   // Add new expense
   Future<bool> addExpense(Expense expense) async {
+    if (_demoMode) {
+      _memory.addExpense(expense);
+      return true;
+    }
     try {
       print('=== ADDING EXPENSE START ===');
       print('Expense data: ${expense.toMap()}');
@@ -76,6 +91,10 @@ class SupabaseExpenseService {
 
   // Update existing expense
   Future<bool> updateExpense(Expense updatedExpense) async {
+    if (_demoMode) {
+      _memory.updateExpense(updatedExpense);
+      return true;
+    }
     try {
       await _supabase
           .from('expenses')
@@ -90,6 +109,10 @@ class SupabaseExpenseService {
 
   // Delete expense
   Future<bool> deleteExpense(String id) async {
+    if (_demoMode) {
+      _memory.deleteExpense(id);
+      return true;
+    }
     try {
       await _supabase
           .from('expenses')
@@ -104,6 +127,9 @@ class SupabaseExpenseService {
 
   // Get expense by ID
   Future<Expense?> getExpenseById(String id) async {
+    if (_demoMode) {
+      return _memory.getExpenseById(id);
+    }
     try {
       final response = await _supabase
           .from('expenses')
@@ -120,11 +146,17 @@ class SupabaseExpenseService {
 
   // Generate new ID (UUID)
   String generateNewId() {
+    if (_demoMode) {
+      return _memory.generateNewId();
+    }
     return DateTime.now().millisecondsSinceEpoch.toString();
   }
 
   // Get available categories
   List<String> getCategories() {
+    if (_demoMode) {
+      return _memory.getCategories();
+    }
     return [
       'Meals',
       'Transportation', 
@@ -140,6 +172,9 @@ class SupabaseExpenseService {
 
   // Get total expenses
   Future<double> getTotalAmount() async {
+    if (_demoMode) {
+      return _memory.getTotalAmount();
+    }
     try {
       final response = await _supabase
           .from('expenses')
@@ -158,6 +193,9 @@ class SupabaseExpenseService {
 
   // Get expenses by date range
   Future<List<Expense>> getExpensesByDateRange(DateTime start, DateTime end) async {
+    if (_demoMode) {
+      return _memory.getExpensesByDateRange(start, end);
+    }
     try {
       final response = await _supabase
           .from('expenses')
@@ -177,6 +215,9 @@ class SupabaseExpenseService {
 
   // Get expenses by category
   Future<List<Expense>> getExpensesByCategory(String category) async {
+    if (_demoMode) {
+      return _memory.getExpensesByCategory(category);
+    }
     try {
       final response = await _supabase
           .from('expenses')
@@ -195,6 +236,9 @@ class SupabaseExpenseService {
 
   // Get monthly summary
   Future<Map<String, double>> getMonthlySummary(int year, int month) async {
+    if (_demoMode) {
+      return _memory.getMonthlySummary(year, month);
+    }
     try {
       final startDate = DateTime(year, month, 1);
       final endDate = DateTime(year, month + 1, 0);
@@ -215,10 +259,17 @@ class SupabaseExpenseService {
 
   // ===== Development helpers (no private field access from UI) =====
   Future<dynamic> devTestSelectOne() async {
+    if (_demoMode) {
+      return _memory.getAllExpenses().then((value) => value.isNotEmpty ? [value.first.toMap()] : []);
+    }
     return await _supabase.from('expenses').select().limit(1);
   }
 
   Future<dynamic> devTestInsert(Map<String, dynamic> data) async {
+    if (_demoMode) {
+      _memory.addExpense(Expense.fromMap(data));
+      return [data];
+    }
     return await _supabase.from('expenses').insert(data).select();
   }
 }
