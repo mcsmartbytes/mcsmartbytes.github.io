@@ -27,17 +27,10 @@ jobs:
           flutter doctor -v
           flutter build web --release --dart-define-from-file=env.json
 
-      - name: Compute Cloudflare project name
+      - name: Set Cloudflare project name
         run: |
-          echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
-          if [ -z "${{ vars.CF_PAGES_PROJECT_NAME }}" ]; then
-            # Default to repo name; must be lowercase and alphanumeric + hyphens
-            SANITIZED=$(echo "$REPO_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
-            if [ -z "$SANITIZED" ]; then SANITIZED=expense-tracker-web; fi
-            echo "PROJECT_NAME=$SANITIZED" >> $GITHUB_ENV
-          else
-            echo "PROJECT_NAME=${{ vars.CF_PAGES_PROJECT_NAME }}" >> $GITHUB_ENV
-          fi
+          # Hard-code to your CF Pages project name to avoid env drift
+          echo "PROJECT_NAME=expenses-made-easy" >> $GITHUB_ENV
 
       - name: Debug PROJECT_NAME
         run: |
