@@ -49,6 +49,7 @@ jobs:
           cp -f web/health.html build/web/ 2>/dev/null || true
           cp -f web/_redirects build/web/ 2>/dev/null || true
           cp -f web/favicon.ico build/web/ 2>/dev/null || true
+          cp -f web/vercel.json build/web/ 2>/dev/null || true
 
       - name: Package site artifact
         run: |
