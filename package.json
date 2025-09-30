@@ -1,0 +1,8 @@
+{
+  "name": "expense-tracker-web",
+  "private": true,
+  "scripts": {
+    "build": "bash scripts/vercel_build.sh"
+  }
+}
+
